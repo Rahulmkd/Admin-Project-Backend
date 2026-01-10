@@ -26,7 +26,6 @@ const userSchema = new mongoose.Schema({
 });
 
 // secure the password with the bcrypt
-
 userSchema.pre("save", async function (next) {
   // console.log("pre method", this);
   const user = this;
@@ -42,6 +41,11 @@ userSchema.pre("save", async function (next) {
     next(error);
   }
 });
+
+// compare password while login
+userSchema.methods.comparePassword = async function (password) {
+  return bcrypt.compare(password, this.password);
+};
 
 // JWT(JSON WEB TOKEN)
 userSchema.methods.generateToken = async function () {
